@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now News Live</title>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    <style>
+        /* 页面基础样式 */
+        body {
+            margin: 0;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden; /* 防止滚动条 */
+        }
+
+        /* 视频样式：全屏自适应 */
+        video {
+            width: 100%; /* 视频宽度占满屏幕 */
+            height: 100%; /* 视频高度占满屏幕 */
+            object-fit: cover; /* 保持视频比例，裁剪多余内容 */
+        }
+    </style>
+</head>
+<body>
+    <video id="videoPlayer" autoplay muted playsinline></video>
+    <script>
+        // MPEG-DASH 流媒体 URL
+        const url = "https://ewcdn101.nowe.com/session/10-439acc56bd5e69cb6681b94567b20/Content/DASH_VOS3/Live/channel(VOS_CH332N)/manifest.mpd?token=614959688b182513db73f8bbad6f4e0e_1743663973";
+
+        // 初始化 Dash.js 播放器
+        const player = dashjs.MediaPlayer().create();
+        player.initialize(document.querySelector("#videoPlayer"), url, true);
+
+        // 确保静音并自动播放
+        const video = document.getElementById("videoPlayer");
+        video.muted = true; // 视频默认静音
+        video.play().catch((error) => {
+            console.error("Autoplay failed:", error);
+        });
+    </script>
+</body>
+</html>
