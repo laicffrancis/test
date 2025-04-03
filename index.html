@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Now News Live</title>
+    <title>Now TV Live</title>
+    <!-- 引入 Dash.js 播放器库 -->
     <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
     <style>
-        /* 页面基础样式 */
         body {
             margin: 0;
             background-color: black;
@@ -14,33 +14,54 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            overflow: hidden; /* 防止滚动条 */
+            overflow: hidden;
         }
 
-        /* 视频样式：全屏自适应 */
         video {
-            width: 100%; /* 视频宽度占满屏幕 */
-            height: 100%; /* 视频高度占满屏幕 */
-            object-fit: cover; /* 保持视频比例，裁剪多余内容 */
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 确保视频比例 */
         }
     </style>
 </head>
 <body>
     <video id="videoPlayer" autoplay muted playsinline></video>
     <script>
-        // MPEG-DASH 流媒体 URL
-        const url = "https://ewcdn101.nowe.com/session/10-439acc56bd5e69cb6681b94567b20/Content/DASH_VOS3/Live/channel(VOS_CH332N)/manifest.mpd?token=614959688b182513db73f8bbad6f4e0e_1743663973";
-
-        // 初始化 Dash.js 播放器
-        const player = dashjs.MediaPlayer().create();
-        player.initialize(document.querySelector("#videoPlayer"), url, true);
-
-        // 确保静音并自动播放
         const video = document.getElementById("videoPlayer");
-        video.muted = true; // 视频默认静音
-        video.play().catch((error) => {
-            console.error("Autoplay failed:", error);
-        });
+        const player = dashjs.MediaPlayer().create();
+
+        // **替换为您的初始直播 URL（带 Token 的 Now TV 流）**
+        let streamUrl = "https://ewcdn16.nowe.com/session/10-6d87e680db11c6d863536ead41df0/Content/DASH_VOS3/Live/channel(VOS_CH332N)/manifest.mpd?token=69397ff59f9f978a2dffbc8d668e5396_1743673122";
+
+        // 设置播放器并加载初始流
+        player.initialize(video, streamUrl, true);
+
+        // 定期更新直播流 URL 的逻辑
+        async function updateStreamUrl() {
+            try {
+                // **替换为您的后端服务地址（用于生成新的 Token）**
+                const apiUrl = "https://your-backend-service.com/get-nowtv-url";
+
+                // 调用后端服务获取新的直播 URL
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json(); // 假设返回 { "url": "新的直播URL" }
+                const newUrl = data.url;
+
+                // 更新播放器的直播流 URL
+                player.attachSource(newUrl);
+                console.log("Stream URL updated:", newUrl);
+            } catch (error) {
+                console.error("Failed to update stream URL:", error);
+            }
+        }
+
+        // 每 30 分钟更新一次直播流 URL
+        const updateInterval = 30 * 60 * 1000; // 30 分钟
+        setInterval(updateStreamUrl, updateInterval);
     </script>
 </body>
 </html>
