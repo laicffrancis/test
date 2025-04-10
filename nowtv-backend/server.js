@@ -5,7 +5,7 @@ const app = express();
 app.get("/get-nowtv-url", (req, res) => {
     // 假设动态生成 Token
     const newToken = "new-generated-token"; // 替换为动态生成逻辑
-    const newUrl = `https://ewcdn16.nowe.com/session/10-${newToken}/Content/DASH_VOS3/Live/channel(VOS_CH332N)/manifest.mpd?token=${newToken}_1743673122`;
+    const newUrl = `https://ewcdn101.nowe.com/session/10-${newToken}/Content/DASH_VOS3/Live/channel(VOS_CH332N)/manifest.mpd?token=${newToken}_1744259720`;
 
     res.json({ url: newUrl });
 });
